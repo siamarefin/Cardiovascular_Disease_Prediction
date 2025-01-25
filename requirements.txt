@@ -1,5 +1,10 @@
-pandas 
+fastapi
+uvicorn
+pandas
 numpy
-matplotlib
 scikit-learn
-fast-api
+xgboost
+joblib
+matplotlib
+seaborn
+umap-learn

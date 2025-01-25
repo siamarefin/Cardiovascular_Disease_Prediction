@@ -32,6 +32,6 @@ This dataset can be used for a variety of analyses, including predictive modelin
 
 ## Data Source and Acknowledgment
 
-Data was sourced from the UCI Machine Learning Repository and Kaggle.
+Data was sourced from the UCI Machine Learning Repository and [Kaggle](https://www.kaggle.com/datasets/colewelkins/cardiovascular-disease/data).
 
 All patient data has been anonymized to ensure privacy.
