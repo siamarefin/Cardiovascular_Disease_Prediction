@@ -12,7 +12,7 @@ def index():
     with open("frontend/index.html", "r") as file:
         return file.read()
     
-@app.post("/welcome")
+@app.post("/start")
 async def upload_merge(file: UploadFile = File(...)):
     try:
         # Define user-specific directories
