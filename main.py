@@ -1,15 +1,17 @@
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import HTMLResponse
-from api.code import preprocess_data, train_model, predict
-import shutil
+from api.code import data_analysis, data_visualization, data_preprocessing, feature_importance, model_apply, predict
 import os
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-# Welcome Page
-@app.get("/")
+app.mount("/static", StaticFiles(directory="frontend"), name = "static")
+
+# Serve home.html
+@app.get("/", response_class=HTMLResponse)
 def index():
-    with open("frontend/index.html", "r") as file:
+    with open("frontend/home.html", "r", encoding="utf-8") as file:
         return file.read()
     
 @app.post("/start")
@@ -38,36 +40,35 @@ async def upload_merge(file: UploadFile = File(...)):
             "message": "Error in uploading file.",
             "error": str(e)
         }
+    
+# @app.post("/start")
+# def start(file:UploadFile File(...)):
+#     try:
 
-# Preprocess API
-@app.post("/preprocess")
-async def preprocess(file: UploadFile = File(...)):
-    raw_data_path = f"data/raw/{file.filename}"
-    processed_data_path = "data/processed/Final_Dataset.csv"
 
-    # Save uploaded file
-    os.makedirs("data/raw", exist_ok=True)
-    with open(raw_data_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+@app.get("/data_analysis")
+def analysis():
+    return data_analysis()
 
-    # Preprocess the data
-    result = preprocess_data(raw_data_path, processed_data_path)
-    return result
+@app.get("/data_visualization")
+def visualization():
+    return data_visualization()
 
-# Train Model API
-@app.get("/train")
-def train():
-    processed_file = "data/processed/Final_Dataset.csv"
-    model_path = "model/model.pkl"
-    result = train_model(processed_file, model_path)
-    return result
+@app.get("/data_preprocessing")
+def preprocessing():
+    return data_preprocessing()
 
-# Predict API
-@app.post("/predict")
-def predict_api(input_data: dict):
-    model_path = "model/model.pkl"
-    result = predict(model_path, input_data)
-    return result
+@app.get("/feature_importance")
+def importance():
+    return feature_importance()
+
+@app.get("/model_apply")
+def apply_model():
+    return model_apply()
+
+@app.get("/predict")
+def make_prediction():
+    return predict()
 
 
 

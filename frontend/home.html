@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cardiovascular Disease Prediction</title>
+    <link rel="stylesheet" href="/static/css/home.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h3>ML Pipeline</h3>
+        <button onclick="callApi('/start')">Start</button>
+        <button onclick="callApi('/data_analysis')">Data Analysis</button>
+        <button onclick="callApi('/data_visualization')">
+          Data Visualization
+        </button>
+        <button onclick="callApi('/data_preprocessing')">
+          Data Preprocessing
+        </button>
+        <button onclick="callApi('/feature_importance')">
+          Feature Importance
+        </button>
+        <button onclick="callApi('/model_apply')">Model Apply</button>
+        <button onclick="callApi('/predict')">Predict</button>
+      </div>
+
+      <!-- Main Content -->
+      <div class="content">
+        <h1>Cardiovascular Disease Prediction</h1>
+        <img
+          src="/static/assests/cardio.png"
+          alt="Cardiovascular Disease"
+          class="cardio-image"
+        />
+        <p>
+          Cardiovascular diseases (CVDs) are a group of disorders of the heart
+          and blood vessels, and they are the leading cause of death globally.
+          Early detection and prevention can significantly reduce the risk. This
+          ML pipeline helps in analyzing data, building models, and making
+          predictions for cardiovascular diseases.
+        </p>
+        <div id="output">
+          <h2>Response</h2>
+          <p>Select an action from the left to see results here.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      async function callApi(endpoint) {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        document.getElementById("output").innerHTML = `<pre>${JSON.stringify(
+          data,
+          null,
+          2
+        )}</pre>`;
+      }
+    </script>
+  </body>
+</html>
