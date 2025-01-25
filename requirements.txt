@@ -8,3 +8,4 @@ joblib
 matplotlib
 seaborn
 umap-learn
+pydantic
