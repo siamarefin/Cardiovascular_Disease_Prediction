@@ -1,0 +1,80 @@
+/* General Page Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+.container {
+  max-width: 1800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Page Header */
+h1 {
+  text-align: center;
+  color: #0056b3;
+}
+
+/* Buttons */
+button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #003d82;
+}
+
+/* Analysis Results */
+#analysis-container {
+  margin-top: 20px;
+}
+
+h2,
+h3 {
+  margin-top: 20px;
+  color: #333;
+}
+
+/* Table Styling */
+.dataframe {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.dataframe th,
+.dataframe td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.dataframe th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+pre {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 import joblib 
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd 
-from api.code import predict  # Import the predict function
+from api.code import predict, data_analysis 
 
 
 
@@ -50,15 +50,20 @@ async def upload_merge(file: UploadFile = File(...)):
             "message": "Error in uploading file.",
             "error": str(e)
         }
-    
-# @app.post("/start")
-# def start(file:UploadFile File(...)):
-#     try:
 
-
-@app.get("/data_analysis")
+@app.post("/data_analysis")
 def analysis():
-    return data_analysis()
+    try:
+        result = data_analysis()
+        return result
+    
+    except Exception as e :
+        error_message = f"""
+            <h2>Error:</h2>
+            <p>{str(e)}</p>
+        """
+        return HTMLResponse(content=error_message, status_code=500)
+
 
 @app.get("/data_visualization")
 def visualization():

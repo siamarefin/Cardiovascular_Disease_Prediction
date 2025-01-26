@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Analysis</title>
+    <link rel="stylesheet" href="/static/css/analysis.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Data Analysis Results</h1>
+      <div id="analysis-container">
+        <!-- Analysis results will load here -->
+      </div>
+      <button onclick="goHome()">Go Home</button>
+    </div>
+    <script>
+      async function fetchAnalysis() {
+        try {
+          // Fetch data analysis results from the API
+          const response = await fetch("/data_analysis",{
+            method: "POST"
+          });
+          if (!response.ok) {
+            throw new Error("Failed to load data analysis results.");
+          }
+          const result = await response.text();
+          document.getElementById("analysis-container").innerHTML = result;
+        } catch (error) {
+          document.getElementById("analysis-container").innerHTML = `
+                    <h2>Error:</h2>
+                    <p>${error.message}</p>
+                `;
+        }
+      }
+
+      function goHome() {
+        window.location.href = "/static/home.html";
+      }
+
+      // Load the data analysis results when the page loads
+      fetchAnalysis();
+    </script>
+  </body>
+</html>

@@ -3,10 +3,51 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 from sklearn.preprocessing import MinMaxScaler
+import os 
 
 def data_analysis():
-    # Example analysis logic
-    return {"message": "Data analysis complete!"}
+    # Path to the dataset
+    file_path = "data/raw/cardio_data.csv"
+    save_path = r"H:\Cardiovascular_Disease_Prediction\files"
+
+    try:
+        # Read the CSV
+        data = pd.read_csv(file_path)
+
+        # Create a string to store all results
+        analysis_results = ""
+
+        # Dataset Overview
+        analysis_results += "<h2>Dataset Overview</h2>"
+        analysis_results += f"<p>Shape of the dataset: {data.shape}</p>"
+
+        # Columns in the dataset
+        analysis_results += "<h3>Columns in the dataset:</h3>"
+        analysis_results += f"<p>{', '.join(data.columns)}</p>"
+
+        # Sample data
+        analysis_results += "<h3>Sample Data:</h3>"
+        analysis_results += data.head().to_html(classes="dataframe", index=False)
+
+        # Statistical summary
+        analysis_results += "<h3>Statistical Summary:</h3>"
+        analysis_results += data.describe().to_html(classes="dataframe")
+
+        # Save the results to an HTML file
+        os.makedirs(save_path, exist_ok=True)  # Ensure the directory exists
+        output_file = os.path.join(save_path, "data_analysis_results.html")
+
+        # Open the file in write mode and save the results
+        with open(output_file, "w", encoding="utf-8") as f:
+            f.write(analysis_results)
+
+        # Return the path of the saved file along with analysis
+        return analysis_results
+
+    except Exception as e:
+        # Handle errors
+        return f"<h2>Error:</h2><p>{str(e)}</p>"
+
 
 def data_visualization():
     # Example visualization logic``
