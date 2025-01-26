@@ -33,6 +33,8 @@ def data_analysis():
         analysis_results += "<h3>Statistical Summary:</h3>"
         analysis_results += data.describe().to_html(classes="dataframe")
 
+
+        # Missing value 
         analysis_results += "<h3>Missing Values:</h3>"
         missing_values = data.isnull().sum()
         missing_values_list = missing_values.to_dict()  # Convert to a dictionary for easier iteration
@@ -42,16 +44,7 @@ def data_analysis():
         for column, missing in missing_values_list.items():
             analysis_results += f"<li>{column}: {missing}</li>"
         analysis_results += "</ul>"
-
-
-        # Save the results to an HTML file
-        os.makedirs(save_path, exist_ok=True)  # Ensure the directory exists
-        output_file = os.path.join(save_path, "data_analysis_results.html")
-
-        # Open the file in write mode and save the results
-        with open(output_file, "w", encoding="utf-8") as f:
-            f.write(analysis_results)
-
+    
         # Return the path of the saved file along with analysis
         return analysis_results
 
