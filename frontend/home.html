@@ -11,7 +11,7 @@
       <!-- Sidebar -->
       <div class="sidebar">
         <h3>ML Pipeline</h3>
-        <button onclick="callApi('/start')">Start</button>
+        <button onclick="navigateTo('/frontend/start.html')">Start</button>
         <button onclick="callApi('/data_analysis')">Data Analysis</button>
         <button onclick="callApi('/data_visualization')">
           Data Visualization
@@ -23,7 +23,7 @@
           Feature Importance
         </button>
         <button onclick="callApi('/model_apply')">Model Apply</button>
-        <button onclick="callApi('/predict')">Predict</button>
+        <button onclick="navigateTo('/frontend/predict.html')">Predict</button>
       </div>
 
       <!-- Main Content -->
@@ -41,22 +41,11 @@
           ML pipeline helps in analyzing data, building models, and making
           predictions for cardiovascular diseases.
         </p>
-        <div id="output">
-          <h2>Response</h2>
-          <p>Select an action from the left to see results here.</p>
-        </div>
       </div>
     </div>
-
     <script>
-      async function callApi(endpoint) {
-        const response = await fetch(endpoint);
-        const data = await response.json();
-        document.getElementById("output").innerHTML = `<pre>${JSON.stringify(
-          data,
-          null,
-          2
-        )}</pre>`;
+      function navigateTo(page) {
+        window.location.href = page;
       }
     </script>
   </body>

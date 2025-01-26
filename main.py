@@ -3,10 +3,14 @@ from api.code import data_analysis, data_visualization, data_preprocessing, feat
 import os
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-
+import joblib 
+from sklearn.preprocessing import MinMaxScaler
+import pandas as pd 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="frontend"), name = "static")
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
 
 # Serve home.html
 @app.get("/", response_class=HTMLResponse)
@@ -65,6 +69,9 @@ def importance():
 @app.get("/model_apply")
 def apply_model():
     return model_apply()
+
+
+
 
 @app.get("/predict")
 def make_prediction():
