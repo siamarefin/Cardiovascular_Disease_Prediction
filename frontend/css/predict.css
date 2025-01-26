@@ -1,0 +1,151 @@
+/* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  /* background: rgb(222, 222, 222); */
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Container */
+.container {
+  margin-top: 5%;
+  margin-left: 5%;
+  width: 50%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.1); /* Transparent white background */
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Updated shadow for better effect */
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px 10px 0 0;
+}
+
+header h1 {
+  font-family: "Pacifico", cursive;
+  font-size: 2.5rem;
+  margin: 0;
+}
+/* form box */
+.form-box {
+  padding: 20px;
+  text-align: left; /* Align form elements to the left */
+}
+
+.form-box h2 {
+  text-align: center; /* Keep the heading centered */
+  color: #fff;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column; /* Stack label and input vertically */
+  margin-bottom: 15px; /* Add space between form groups */
+}
+
+label {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: #dcdcdc; /* Light gray text */
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: #fff;
+}
+
+input::placeholder {
+  color: #dcdcdc;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: #ffffff;
+  color: #2575fc;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  margin-top: 20px;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: #ffffff;
+}
+
+/* Prediction Box */
+.prediction-box {
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  border-radius: 10px;
+}
+
+.prediction-box h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.result ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.result ul li {
+  background: rgba(124, 57, 233, 0.2);
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.result ul li strong {
+  color: #dcdcdc; /* Light gray for labels */
+}
+
+.result ul li span {
+  color: #ffffff; /* White for values */
+}
+
+/* Footer */
+footer {
+  background: rgba(255, 255, 255, 0.2);
+  color: #dcdcdc;
+  text-align: center;
+  padding: 10px;
+  border-radius: 0 0 10px 10px;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}

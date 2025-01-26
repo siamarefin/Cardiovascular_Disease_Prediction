@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from api.code import data_analysis, data_visualization, data_preprocessing, feature_importance, model_apply, predict
 import os
 from fastapi.responses import HTMLResponse
@@ -6,6 +6,12 @@ from fastapi.staticfiles import StaticFiles
 import joblib 
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd 
+from api.code import predict  # Import the predict function
+
+
+
+
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="frontend"), name = "static")
@@ -73,9 +79,27 @@ def apply_model():
 
 
 
-@app.get("/predict")
-def make_prediction():
-    return predict()
+@app.post("/predict")
+def make_prediction(input_data: dict):
+    """
+    json_input = {
+    "ap_hi": 120,
+    "ap_lo": 80,
+    "cholesterol": 1, 
+    "age_years": 47,  
+    "bmi": 26.573129         
+}
+
+    API endpoint to call the predict function from code.py
+    :param input_data: JSON with input features
+    :return: Prediction result
+    """
+    result = predict(input_data)  # Call the predict function
+
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])  # Handle errors
+
+    return result
 
 
 

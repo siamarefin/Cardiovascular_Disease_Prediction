@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prediction</title>
+    <link rel="stylesheet" href="/static/css/predict.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header>
+        <h1>Cardiovascular Disease Prediction</h1>
+      </header>
+
+      <!-- Input Form Section -->
+      <main>
+        <div class="form-box">
+          <h2>Enter Input Data</h2>
+          <div class="form-box">
+            <form id="prediction-form">
+              <div class="form-group">
+                <label for="ap_hi">Systolic Blood Pressure (ap_hi):</label>
+                <input type="number" id="ap_hi" name="ap_hi" required />
+              </div>
+
+              <div class="form-group">
+                <label for="ap_lo">Diastolic Blood Pressure (ap_lo):</label>
+                <input type="number" id="ap_lo" name="ap_lo" required />
+              </div>
+
+              <div class="form-group">
+                <label for="cholesterol"
+                  >Cholesterol Level (cholesterol):</label
+                >
+                <input
+                  type="number"
+                  id="cholesterol"
+                  name="cholesterol"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="age_years">Age (years):</label>
+                <input type="number" id="age_years" name="age_years" required />
+              </div>
+
+              <div class="form-group">
+                <label for="bmi">Body Mass Index (bmi):</label>
+                <input type="number" step="0.01" id="bmi" name="bmi" required />
+              </div>
+
+              <button type="button" id="submit-button">Predict</button>
+              <button onclick="goHome()">Go Home</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Prediction Results -->
+        <div
+          class="prediction-box"
+          id="prediction-result"
+          style="display: none"
+        >
+          <h2>Prediction Result</h2>
+          <div class="result">
+            <p><strong>Input Data:</strong></p>
+            <ul id="input-data"></ul>
+            <p>
+              <strong>Predicted Cardio:</strong>
+              <span id="predicted-cardio"></span>
+            </p>
+          </div>
+          
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document
+        .getElementById("submit-button")
+        .addEventListener("click", async () => {
+          // Gather input data
+          const inputData = {
+            ap_hi: parseInt(document.getElementById("ap_hi").value),
+            ap_lo: parseInt(document.getElementById("ap_lo").value),
+            cholesterol: parseInt(document.getElementById("cholesterol").value),
+            age_years: parseInt(document.getElementById("age_years").value),
+            bmi: parseFloat(document.getElementById("bmi").value),
+          };
+
+          try {
+            // Call the /predict API
+            const response = await fetch("/predict", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(inputData),
+            });
+
+            // Handle the API response
+            if (response.ok) {
+              const result = await response.json();
+              displayPrediction(result);
+            } else {
+              const error = await response.json();
+              alert(`Error: ${error.detail}`);
+            }
+          } catch (error) {
+            alert(`An error occurred: ${error.message}`);
+          }
+        });
+
+      // Function to display the prediction result
+      function displayPrediction(response) {
+        const inputData = response.input;
+        const predictedCardio = response.predicted_cardio;
+
+        // Populate input data
+        const inputList = document.getElementById("input-data");
+        inputList.innerHTML = ""; // Clear previous data
+        Object.entries(inputData).forEach(([key, value]) => {
+          const listItem = document.createElement("li");
+          listItem.textContent = `${key}: ${value}`;
+          inputList.appendChild(listItem);
+        });
+
+        // Populate prediction result
+        document.getElementById("predicted-cardio").textContent =
+          predictedCardio === 1 ? "Yes (Cardio)" : "No (Healthy)";
+
+        // Show the result section
+        document.getElementById("prediction-result").style.display = "block";
+      }
+
+      // Function to redirect to the home page
+      function goHome() {
+        window.location.href = "/frontend/home.html";
+      }
+    </script>
+  </body>
+</html>

@@ -1,63 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Start - Upload CSV</title>
-    <link rel="stylesheet" href="/static/css/start.css" />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start the ML Pipeline</title>
+    <link rel="stylesheet" href="/static/css/start.css">
+</head>
+<body>
     <div class="container">
-      <h1>Start the ML Pipeline</h1>
-      <form id="start-form" method="post" enctype="multipart/form-data">
-        <label for="csv-file">Upload your CSV file:</label>
-        <input type="file" id="csv-file" name="file" accept=".csv" required />
-        <button type="submit">Submit</button>
-      </form>
-      <div id="message"></div>
+        <h1>Start the ML Pipeline</h1>
+        <form id="upload-form" method="post" enctype="multipart/form-data">
+            <label for="csv-file">Upload your CSV file:</label>
+            <input type="file" id="csv-file" name="file" accept=".csv" required>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="dataframe-container" style="margin-top: 20px;">
+            <!-- The DataFrame will be displayed here -->
+        </div>
+        <button onclick="goHome()">Go Home</button>
     </div>
 
     <script>
-      // JavaScript to handle form submission
-      document
-        .getElementById("start-form")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault(); // Prevent default form submission behavior
+        document.getElementById("upload-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-          const formData = new FormData();
-          const fileInput = document.getElementById("csv-file");
-          formData.append("file", fileInput.files[0]);
+            const formData = new FormData();
+            const fileInput = document.getElementById("csv-file");
+            formData.append("file", fileInput.files[0]);
 
-          try {
-            // Call the /start API
-            const response = await fetch("/start", {
-              method: "POST",
-              body: formData,
-            });
+            try {
+                // Call the API to upload the file and get the DataFrame
+                const response = await fetch("/start", {
+                    method: "POST",
+                    body: formData,
+                });
 
-            const result = await response.json();
-
-            // Display the response message
-            if (result.success) {
-              document.getElementById("message").innerHTML = `
-                        <p style="color: green;">${result.message}</p>
-                    `;
-
-              // Redirect to the next page (data analysis)
-              setTimeout(() => {
-                window.location.href = "/frontend/data_analysis.html";
-              }, 2000); // Redirect after 2 seconds
-            } else {
-              document.getElementById("message").innerHTML = `
-                        <p style="color: red;">${result.message}</p>
-                    `;
+                const result = await response.text(); // Expect HTML table as the response
+                document.getElementById("dataframe-container").innerHTML = result;
+            } catch (error) {
+                alert(`Error: ${error.message}`);
             }
-          } catch (error) {
-            document.getElementById("message").innerHTML = `
-                    <p style="color: red;">Error: ${error.message}</p>
-                `;
-          }
         });
+
+        function goHome() {
+            window.location.href = "/frontend/home.html";
+        }
     </script>
-  </body>
+</body>
 </html>
