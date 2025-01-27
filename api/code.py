@@ -327,9 +327,13 @@ def random_forest_classifier():
         y_pred_rf = model.predict(X_val)
         y_pred_prob_rf = model.predict_proba(X_val)[:, 1]
 
-        # Generate results directory
+        
+        # Save the trained model
+
         save_dir = "files"
         os.makedirs(save_dir, exist_ok=True)
+        model_file = os.path.join(save_dir, "RandomForestClassifier_model.pkl")
+        joblib.dump(model, model_file)
 
          # Save classification report
         report = classification_report(y_val, y_pred_rf)
@@ -391,13 +395,16 @@ def gradient_boosting_classifier():
         model = GradientBoostingClassifier(n_estimators=50, learning_rate=0.1, max_depth=3, random_state=42)
         model.fit(X_train, y_train)
 
+        # Save the trained model
+        save_dir = "files"
+        os.makedirs(save_dir, exist_ok=True)
+        model_file = os.path.join(save_dir, "GradientBoostingClassifier_model.pkl")
+        joblib.dump(model, model_file)
+
         # Predictions
         y_pred_gb = model.predict(X_val)
         y_pred_prob_gb = model.predict_proba(X_val)[:, 1]
 
-        # Generate results directory
-        save_dir = "files"
-        os.makedirs(save_dir, exist_ok=True)
 
         # Save classification report
         report = classification_report(y_val, y_pred_gb)
@@ -438,7 +445,75 @@ def gradient_boosting_classifier():
         return f"<h2>Error:</h2><p>{str(e)}</p>"
 
 
+def xgboost_classifier():
+    try:
+        # Load the dataset
+        file_path = "files/final_data.csv"
+        if not os.path.exists(file_path):
+            return "<h2>Error:</h2><p>File not found: Ensure the dataset exists at 'files/final_data.csv'.</p>"
 
+        df = pd.read_csv(file_path)
+        print("siam arefin xgboost")
+
+        # Define features (X) and target (y)
+        X = df.drop(columns=['cardio'])  # Features
+        y = df['cardio']  # Target
+
+        # Split the dataset into training and validation sets
+        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=42)
+
+        # Initialize and fit the XGBoost model with fixed hyperparameters
+        model = XGBClassifier(n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42, use_label_encoder=False, eval_metric='logloss')
+        model.fit(X_train, y_train)
+
+        # Save the trained model
+        save_dir = "files"
+        os.makedirs(save_dir, exist_ok=True)
+        model_file = os.path.join(save_dir, "XGBoostClassifier_model.pkl")
+        joblib.dump(model, model_file)
+
+        # Predictions
+        y_pred_xgb = model.predict(X_val)
+        y_pred_prob_xgb = model.predict_proba(X_val)[:, 1]
+
+        # Save classification report
+        report = classification_report(y_val, y_pred_xgb)
+        report_file = os.path.join(save_dir, "XGBoostClassifier_classification_report.txt")
+        with open(report_file, "w") as f:
+            f.write(report)
+
+        # Save confusion matrix plot
+        cm_xgb = confusion_matrix(y_val, y_pred_xgb)
+        cm_file = os.path.join(save_dir, "XGBoostClassifier_confusion_matrix.png")
+        ConfusionMatrixDisplay(confusion_matrix=cm_xgb).plot(cmap="Blues")
+        plt.savefig(cm_file, dpi=300, bbox_inches='tight')
+        plt.close()
+
+        # Save ROC curve
+        fpr, tpr, _ = roc_curve(y_val, y_pred_prob_xgb)
+        roc_auc = auc(fpr, tpr)
+        plt.figure(figsize=(8, 6))
+        plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:.2f})')
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        plt.title('Receiver Operating Characteristic (ROC) Curve - XGBoost')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.legend(loc='lower right')
+        plt.grid(True)
+        roc_curve_file = os.path.join(save_dir, "XGBoostClassifier_roc_curve.png")
+        plt.savefig(roc_curve_file, dpi=300, bbox_inches='tight')
+        plt.close()
+
+        # Return file paths
+        return {
+            "model_file": model_file,
+            "confusion_matrix": cm_file,
+            "classification_report": report_file,
+            "roc_curve": roc_curve_file
+        }
+
+    except Exception as e:
+        return f"<h2>Error:</h2><p>{str(e)}</p>"
 
 
 

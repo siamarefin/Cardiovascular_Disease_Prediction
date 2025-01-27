@@ -6,7 +6,8 @@ from fastapi.staticfiles import StaticFiles
 import joblib 
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd 
-
+from fastapi.responses import JSONResponse
+from api.code import random_forest_classifier, gradient_boosting_classifier, xgboost_classifier
 
 
 
@@ -73,8 +74,7 @@ def preprocessing():
     return file_Path
 
 
-from fastapi.responses import JSONResponse
-from api.code import random_forest_classifier, gradient_boosting_classifier
+
 
 @app.get("/random_forest", response_class=JSONResponse)
 def perform_random_forest():
@@ -92,6 +92,17 @@ from fastapi.responses import JSONResponse
 @app.get("/gradient_boosting", response_class=JSONResponse)
 def perform_gradient_boosting():
     results = gradient_boosting_classifier()
+
+    # Handle errors
+    if isinstance(results, str) and results.startswith("<h2>Error:</h2>"):
+        return {"error": results}
+
+    # Return the file paths as a JSON response
+    return results
+
+@app.get("/xgboost", response_class=JSONResponse)
+def perform_xgboost():
+    results = xgboost_classifier()
 
     # Handle errors
     if isinstance(results, str) and results.startswith("<h2>Error:</h2>"):
