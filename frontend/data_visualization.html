@@ -30,6 +30,7 @@
         </div>
       </div>
 
+      <!-- Fetch Button -->
       <button id="fetch-results" class="btn">
         Fetch Data Visualization Results
       </button>
@@ -38,9 +39,15 @@
 
     <script>
       async function fetchVisualizationResults() {
+        const button = document.getElementById("fetch-results");
+
         try {
+          // Change button text to indicate fetching
+          button.textContent = "Fetching...";
+
           // Call the API to generate visualizations
           const response = await fetch("/data_visualization");
+
           if (!response.ok) {
             throw new Error("Failed to fetch data visualization results.");
           }
@@ -56,13 +63,13 @@
           // Render the full table in the final-table container
           if (tableHTML) {
             document.getElementById("final-table").innerHTML = `
-        <h2>Final Table</h2>
-        ${tableHTML.outerHTML}
-    `;
+              <h2>Final Table</h2>
+              ${tableHTML.outerHTML}
+            `;
           } else {
             document.getElementById("final-table").innerHTML = `
-        <p>Final table not found in the response. Check the API for correct implementation.</p>
-    `;
+              <p>Final table not found in the response. Check the API for correct implementation.</p>
+            `;
           }
 
           // Dynamically display all saved plots
@@ -86,7 +93,6 @@
             "gluc_vs_cardio_histogram_general.png",
             "smoke_distribution_pie.png",
             "smoke_vs_cardio_histogram_general.png",
-            // Add all other plot filenames here
           ];
 
           let plotsHTML = "";
@@ -97,11 +103,17 @@
             </div>`;
           }
           document.getElementById("plots").innerHTML = plotsHTML;
+
+          // Change button text back to the original
+          button.textContent = "Fetch Data Visualization Results";
         } catch (error) {
           document.getElementById("final-table").innerHTML = `
             <h2>Error:</h2>
             <p>${error.message}</p>
-        `;
+          `;
+
+          // Change button text back to the original
+          button.textContent = "Fetch Data Visualization Results";
         }
       }
 
