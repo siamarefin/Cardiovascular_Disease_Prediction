@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download Files</title>
-  <link rel="stylesheet" href="/static/css/download.css">
-</head>
-<body>
-  <div class="container">
-    <h1>Download Your Files</h1>
-    <p>Click the button below to download all generated files as a ZIP archive:</p>
-    <button class="btn" onclick="downloadFiles()">Download Files</button>
-    <button onclick="goHome()" class="btn">Go Home</button>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Download Files</title>
+    <link rel="stylesheet" href="/static/css/download.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Download Your Files</h1>
+      <p>
+        Click the button below to download all generated files as a ZIP archive:
+      </p>
+      <button class="btn" onclick="downloadFiles()">Download Files</button>
+      <button onclick="goHome()" class="btn">Go Home</button>
+    </div>
 
-  <script>
-    function downloadFiles() {
-      // Redirect to the download API endpoint
-      window.location.href = "/download_files";
-    }
+    <script>
+      function downloadFiles() {
+        // Redirect to the download API endpoint
+        window.location.href = "/download_files";
+      }
 
-    function goHome() {
-      window.location.href = "/static/home.html";
-    }
-  </script>
-</body>
+      function goHome() {
+        window.location.href = "/static/home.html";
+      }
+    </script>
+  </body>
 </html>

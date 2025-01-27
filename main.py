@@ -134,25 +134,25 @@ def make_prediction(input_data: dict):
 @app.get("/download_files", response_class=FileResponse)
 def download_files():
     try:
-        # Define the directory to compress and the output zip file
+        # Define the source directory and output ZIP file path
         source_dir = "files"
-        zip_file = "files/files_archive.zip"
+        zip_file = "files_archive.zip"
 
         # Ensure the files directory exists
         if not os.path.exists(source_dir):
             return {"error": "Files directory does not exist."}
 
-        # Create a zip file of the directory
-        shutil.make_archive(base_name=source_dir, format='zip', root_dir=source_dir)
+        # Create a ZIP archive of the files directory
+        shutil.make_archive(base_name="files_archive", format="zip", root_dir=source_dir)
 
-        # Return the zip file as a response
+        # Return the ZIP file as a response
         return FileResponse(zip_file, media_type="application/zip", filename="files_archive.zip")
 
     except Exception as e:
         return {"error": str(e)}
     
 
-    
+
 
 if __name__ == "__main__":
     import uvicorn
