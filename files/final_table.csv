@@ -1,0 +1,23 @@
+Column,Value,Cardio=0,Cardio=1
+gender,1,22593,21834
+gender,2,11940,11838
+cholesterol,1,28953,22269
+cholesterol,2,3721,5470
+cholesterol,3,1859,5933
+gluc,1,30477,27550
+gluc,2,2068,2930
+gluc,3,1988,3192
+smoke,0,31346,30880
+smoke,1,3187,2792
+alco,0,32629,31952
+alco,1,1904,1720
+active,0,6270,7129
+active,1,28263,26543
+bp_category,Elevated,2100,1001
+bp_category,Hypertension Stage 1,21927,17823
+bp_category,Hypertension Stage 2,3176,12761
+bp_category,Normal,7330,2087
+bp_category,Elevated,2100,1001
+bp_category,Hypertension Stage 1,21927,17823
+bp_category,Hypertension Stage 2,3176,12761
+bp_category,Normal,7330,2087

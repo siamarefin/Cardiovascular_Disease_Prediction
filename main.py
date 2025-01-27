@@ -6,8 +6,7 @@ from fastapi.staticfiles import StaticFiles
 import joblib 
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd 
-from api.code import predict, data_analysis 
-
+from api.code import predict, data_analysis, feature_importance
 
 
 
@@ -16,6 +15,7 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="frontend"), name = "static")
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+app.mount("/files", StaticFiles(directory="H:/Cardiovascular_Disease_Prediction/files"), name="files")
 
 
 # Serve home.html
@@ -63,19 +63,28 @@ def analysis():
             <p>{str(e)}</p>
         """
         return HTMLResponse(content=error_message, status_code=500)
-
-
-@app.get("/data_visualization")
+    
+@app.get("/data_visualization", response_class=HTMLResponse)
 def visualization():
     return data_visualization()
+
+@app.get("/feature_importance")
+def importance():
+    try:
+        result  = feature_importance()
+
+        return result 
+
+    except Exception as e:
+        return " Error" 
+    return feature_importance()
+
 
 @app.get("/data_preprocessing")
 def preprocessing():
     return data_preprocessing()
 
-@app.get("/feature_importance")
-def importance():
-    return feature_importance()
+
 
 @app.get("/model_apply")
 def apply_model():

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feature Importance</title>
+    <link rel="stylesheet" href="/static/css/feature_importance.cs" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Feature Importance</h1>
+
+      <!-- Section to display feature importance table -->
+      <div id="feature-importance-container">
+        <!-- Feature importance rankings will be dynamically loaded here -->
+      </div>
+
+      <!-- Section to display the feature importance plot -->
+      <div
+        id="feature-importance-plot"
+        style="margin-top: 20px; text-align: center; display: none"
+      >
+        <h2>Feature Importance Plot</h2>
+        <!-- <img
+          src="/files/feature_importance_plot.png"
+          alt="Feature Importance Plot"
+          id="importance-plot"
+        /> -->
+      </div>
+
+      <button id="fetch-feature-importance" class="btn">
+        Fetch Feature Importance
+      </button>
+      <button onclick="goHome()" class="btn">Go Home</button>
+    </div>
+
+    <script>
+      // Fetch feature importance data from API
+      document
+        .getElementById("fetch-feature-importance")
+        .addEventListener("click", async () => {
+          try {
+            const response = await fetch("/feature_importance");
+            if (!response.ok) {
+              throw new Error("Failed to fetch feature importance.");
+            }
+            const result = await response.text();
+            document.getElementById("feature-importance-container").innerHTML =
+              result;
+
+            // Display the feature importance plot
+            document.getElementById("feature-importance-plot").style.display =
+              "block";
+          } catch (error) {
+            document.getElementById(
+              "feature-importance-container"
+            ).innerHTML = `
+                    <h2>Error:</h2>
+                    <p>${error.message}</p>
+                `;
+          }
+        });
+
+      // Redirect to home page
+      function goHome() {
+        window.location.href = "/static/home.html";
+      }
+    </script>
+  </body>
+</html>

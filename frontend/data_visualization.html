@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Visualization</title>
+    <link rel="stylesheet" href="/static/css/data_visualization.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Data Visualization</h1>
+      <p>
+        Analyze and visualize the cardiovascular data. Below, you can view the
+        final table and all saved plots dynamically.
+      </p>
+
+      <!-- Section for Final Table -->
+      <div id="final-table-container">
+        <h2>Final Table</h2>
+        <div id="final-table">
+          <!-- Final table will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Section for Plots -->
+      <div id="plots-container">
+        <h2>Generated Plots</h2>
+        <div id="plots">
+          <!-- Generated plots will be loaded here -->
+        </div>
+      </div>
+
+      <button id="fetch-results" class="btn">
+        Fetch Data Visualization Results
+      </button>
+      <button onclick="goHome()" class="btn">Go Home</button>
+    </div>
+
+    <script>
+      async function fetchVisualizationResults() {
+        try {
+          // Call the API to generate visualizations
+          const response = await fetch("/data_visualization");
+          if (!response.ok) {
+            throw new Error("Failed to fetch data visualization results.");
+          }
+
+          // Get the API response as text
+          const result = await response.text();
+
+          // Dynamically update the final table and message
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(result, "text/html");
+          const tableHTML = htmlDoc.querySelector("table.dataframe");
+
+          // Render the full table in the final-table container
+          if (tableHTML) {
+            document.getElementById("final-table").innerHTML = `
+        <h2>Final Table</h2>
+        ${tableHTML.outerHTML}
+    `;
+          } else {
+            document.getElementById("final-table").innerHTML = `
+        <p>Final table not found in the response. Check the API for correct implementation.</p>
+    `;
+          }
+
+          // Dynamically display all saved plots
+          const plotFiles = [
+            "active_distribution_pie.png",
+            "active_vs_cardio_histogram_general.png",
+            "active_vs_cardio_histogram.png",
+            "age_years_vs_cardio_histogram_general.png",
+            "alco_distribution_pie.png",
+            "alco_vs_cardio_histogram_general.png",
+            "bmi_vs_cardio_histogram_general.png",
+            "bp_category_distribution_pie.png",
+            "bp_category_encoded_vs_cardio_histogram.png",
+            "bp_category_vs_cardio_histogram_general.png",
+            "cardio_distribution_pie.png",
+            "cholesterol_distribution_pie.png",
+            "cholesterol_vs_cardio_histogram_general.png",
+            "final_table.csv",
+            "gender_distribution_pie.png",
+            "gender_vs_cardio_histogram_general.png",
+            "gluc_vs_cardio_histogram_general.png",
+            "smoke_distribution_pie.png",
+            "smoke_vs_cardio_histogram_general.png",
+            // Add all other plot filenames here
+          ];
+
+          let plotsHTML = "";
+          for (const file of plotFiles) {
+            plotsHTML += `<div class="plot">
+                <h3>${file.replace(/_/g, " ").replace(".png", "")}</h3>
+                <img src="/files/${file}" alt="${file}" />
+            </div>`;
+          }
+          document.getElementById("plots").innerHTML = plotsHTML;
+        } catch (error) {
+          document.getElementById("final-table").innerHTML = `
+            <h2>Error:</h2>
+            <p>${error.message}</p>
+        `;
+        }
+      }
+
+      // Fetch results on button click
+      document
+        .getElementById("fetch-results")
+        .addEventListener("click", fetchVisualizationResults);
+
+      // Redirect to the home page
+      function goHome() {
+        window.location.href = "/static/home.html";
+      }
+    </script>
+  </body>
+</html>
