@@ -8,7 +8,8 @@ from sklearn.preprocessing import MinMaxScaler
 import pandas as pd 
 from fastapi.responses import JSONResponse
 from api.code import random_forest_classifier, gradient_boosting_classifier, xgboost_classifier
-
+import shutil
+from fastapi.responses import FileResponse
 
 
 app = FastAPI()
@@ -112,6 +113,7 @@ def perform_xgboost():
     return results
 
 
+
 @app.post("/predict")
 def make_prediction(input_data: dict):
     """
@@ -129,7 +131,28 @@ def make_prediction(input_data: dict):
     """
     return predict(input_data)
 
+@app.get("/download_files", response_class=FileResponse)
+def download_files():
+    try:
+        # Define the directory to compress and the output zip file
+        source_dir = "files"
+        zip_file = "files/files_archive.zip"
 
+        # Ensure the files directory exists
+        if not os.path.exists(source_dir):
+            return {"error": "Files directory does not exist."}
+
+        # Create a zip file of the directory
+        shutil.make_archive(base_name=source_dir, format='zip', root_dir=source_dir)
+
+        # Return the zip file as a response
+        return FileResponse(zip_file, media_type="application/zip", filename="files_archive.zip")
+
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+    
 
 if __name__ == "__main__":
     import uvicorn

@@ -518,41 +518,17 @@ def xgboost_classifier():
 
 
 
+# Get the absolute path to the model file
+model_path = os.path.join("files", "XGBoostClassifier_model.pkl")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Load the model and scaler
-model_path = "model/model.pkl"
+# Load the model
 try:
-    best_model = joblib.load(model_path)  # Load the trained model
+    best_model = joblib.load(model_path)
+    print("Model loaded successfully.")
+except FileNotFoundError:
+    raise Exception(f"Model file not found at: {model_path}")
 except Exception as e:
-    raise Exception(f"Error loading model or scaler: {str(e)}")
+    raise Exception(f"Error loading model: {str(e)}")
 
 def predict(input_data: dict):
     """
