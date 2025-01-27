@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gradient Boosting Results</title>
+    <link rel="stylesheet" href="/static/css/gradient_boosting.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Gradient Boosting Results</h1>
+      <div id="results-container">
+        <!-- Results will be dynamically loaded here -->
+      </div>
+      <button onclick="goHome()" class="btn">Go Home</button>
+    </div>
+
+    <script>
+      async function fetchResults() {
+        try {
+          const response = await fetch("/gradient_boosting");
+          if (!response.ok) {
+            throw new Error("Failed to fetch Gradient Boosting results.");
+          }
+          const results = await response.json();
+
+          if (results.error) {
+            document.getElementById("results-container").innerHTML = `
+              <h2>Error:</h2>
+              <p>${results.error}</p>
+            `;
+          } else {
+            // Display the results dynamically
+            document.getElementById("results-container").innerHTML = `
+              <h2>Confusion Matrix:</h2>
+              <img src="/files/GradientBoostingClassifier_confusion_matrix.png" alt="Confusion Matrix" style="width:100%; max-width:600px;" />
+              <h2>Classification Report:</h2>
+              <a href="/files/GradientBoostingClassifier_classification_report.txt" target="_blank">Download Classification Report</a>
+              <h2>ROC Curve:</h2>
+              <img src="/files/GradientBoostingClassifier_roc_curve.png" alt="ROC Curve" style="width:100%; max-width:600px;" />
+            `;
+          }
+        } catch (error) {
+          document.getElementById("results-container").innerHTML = `
+            <h2>Error:</h2>
+            <p>${error.message}</p>
+          `;
+        }
+      }
+
+      function goHome() {
+        window.location.href = "/static/home.html";
+      }
+
+      // Fetch results when the page loads
+      fetchResults();
+    </script>
+  </body>
+</html>

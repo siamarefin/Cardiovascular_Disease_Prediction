@@ -12,6 +12,14 @@ from matplotlib.figure import Figure
 import matplotlib
 matplotlib.use('Agg')
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import confusion_matrix, classification_report, ConfusionMatrixDisplay
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay, roc_curve, auc
+import joblib  # For saving the model
+from xgboost import XGBClassifier
+
 
 def data_analysis():
     # Path to the dataset
@@ -287,9 +295,182 @@ def data_preprocessing():
         return f"<h2>Error:</h2><p>{str(e)}</p>"
 
 
-def model_apply():
-    # Example model training logic
-    return {"message": "Model trained successfully!"}
+
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay, roc_curve, auc
+
+def random_forest_classifier():
+    try:
+        # Load the dataset
+        file_path = "files/final_data.csv"
+        if not os.path.exists(file_path):
+            return "<h2>Error:</h2><p>File not found: Ensure the dataset exists at 'files/final_data.csv'.</p>"
+
+        df = pd.read_csv(file_path)
+
+        # Define features (X) and target (y)
+        X = df.drop(columns=['cardio'])  # Features
+        y = df['cardio']  # Target
+
+        # Split the dataset into training and validation sets
+        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=42)
+
+        # Initialize and fit the Random Forest model with fixed hyperparameters
+        model = RandomForestClassifier(n_estimators=50, max_depth=10, min_samples_split=2, random_state=42)
+        model.fit(X_train, y_train)
+
+        # Predictions
+        y_pred_rf = model.predict(X_val)
+        y_pred_prob_rf = model.predict_proba(X_val)[:, 1]
+
+        # Generate results directory
+        save_dir = "files"
+        os.makedirs(save_dir, exist_ok=True)
+
+         # Save classification report
+        report = classification_report(y_val, y_pred_rf)
+        report_file = os.path.join(save_dir, "RandomForestClassifier_classification_report.txt")
+        with open(report_file, "w") as f:
+            f.write(report)
+
+       # Save confusion matrix plot
+        cm_rf = confusion_matrix(y_val, y_pred_rf)
+        cm_file = os.path.join(save_dir, "RandomForestClassifier_confusion_matrix.png")
+        ConfusionMatrixDisplay(confusion_matrix=cm_rf).plot(cmap="Blues")
+        plt.savefig(cm_file, dpi=300, bbox_inches='tight')
+        plt.close()
+
+        # Save ROC curve
+        fpr, tpr, _ = roc_curve(y_val, y_pred_prob_rf)
+        roc_auc = auc(fpr, tpr)
+        plt.figure(figsize=(8, 6))
+        plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:.2f})')
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        plt.title('Receiver Operating Characteristic (ROC) Curve - Random Forest')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.legend(loc='lower right')
+        plt.grid(True)
+        roc_curve_file = os.path.join(save_dir, "RandomForestClassifier_roc_curve.png")
+        plt.savefig(roc_curve_file, dpi=300, bbox_inches='tight')
+        plt.close()
+
+        # Return file paths
+        return {
+            "confusion_matrix": cm_file,
+            "classification_report": report_file,
+            "roc_curve": roc_curve_file
+        }
+
+    except Exception as e:
+        return f"<h2>Error:</h2><p>{str(e)}</p>"
+
+
+def gradient_boosting_classifier():
+    try:
+        # Load the dataset
+        file_path = "files/final_data.csv"
+        if not os.path.exists(file_path):
+            return "<h2>Error:</h2><p>File not found: Ensure the dataset exists at 'files/final_data.csv'.</p>"
+
+        df = pd.read_csv(file_path)
+        print("siam arefin gradient boost")
+
+        # Define features (X) and target (y)
+        X = df.drop(columns=['cardio'])  # Features
+        y = df['cardio']  # Target
+
+        # Split the dataset into training and validation sets
+        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.3, random_state=42)
+
+        # Initialize and fit the Gradient Boosting model with fixed hyperparameters
+        model = GradientBoostingClassifier(n_estimators=50, learning_rate=0.1, max_depth=3, random_state=42)
+        model.fit(X_train, y_train)
+
+        # Predictions
+        y_pred_gb = model.predict(X_val)
+        y_pred_prob_gb = model.predict_proba(X_val)[:, 1]
+
+        # Generate results directory
+        save_dir = "files"
+        os.makedirs(save_dir, exist_ok=True)
+
+        # Save classification report
+        report = classification_report(y_val, y_pred_gb)
+        report_file = os.path.join(save_dir, "GradientBoostingClassifier_classification_report.txt")
+        with open(report_file, "w") as f:
+            f.write(report)
+
+        # Save confusion matrix plot
+        cm_gb = confusion_matrix(y_val, y_pred_gb)
+        cm_file = os.path.join(save_dir, "GradientBoostingClassifier_confusion_matrix.png")
+        ConfusionMatrixDisplay(confusion_matrix=cm_gb).plot(cmap="Blues")
+        plt.savefig(cm_file, dpi=300, bbox_inches='tight')
+        plt.close()
+
+        # Save ROC curve
+        fpr, tpr, _ = roc_curve(y_val, y_pred_prob_gb)
+        roc_auc = auc(fpr, tpr)
+        plt.figure(figsize=(8, 6))
+        plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:.2f})')
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        plt.title('Receiver Operating Characteristic (ROC) Curve - Gradient Boosting')
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.legend(loc='lower right')
+        plt.grid(True)
+        roc_curve_file = os.path.join(save_dir, "GradientBoostingClassifier_roc_curve.png")
+        plt.savefig(roc_curve_file, dpi=300, bbox_inches='tight')
+        plt.close()
+
+        # Return file paths
+        return {
+            "confusion_matrix": cm_file,
+            "classification_report": report_file,
+            "roc_curve": roc_curve_file
+        }
+
+    except Exception as e:
+        return f"<h2>Error:</h2><p>{str(e)}</p>"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Load the model and scaler
 model_path = "model/model.pkl"

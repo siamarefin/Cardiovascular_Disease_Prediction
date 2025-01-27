@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form
-from api.code import data_analysis, data_visualization, data_preprocessing, feature_importance, model_apply, predict
+from api.code import data_analysis, data_visualization, data_preprocessing, feature_importance, predict
 import os
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -73,11 +73,32 @@ def preprocessing():
     return file_Path
 
 
-@app.get("/model_apply")
-def apply_model():
-    return model_apply()
+from fastapi.responses import JSONResponse
+from api.code import random_forest_classifier, gradient_boosting_classifier
 
+@app.get("/random_forest", response_class=JSONResponse)
+def perform_random_forest():
+    results = random_forest_classifier()
 
+    # Handle errors
+    if isinstance(results, str) and results.startswith("<h2>Error:</h2>"):
+        return {"error": results}
+
+    # Return the results as JSON
+    return results
+
+from fastapi.responses import JSONResponse
+
+@app.get("/gradient_boosting", response_class=JSONResponse)
+def perform_gradient_boosting():
+    results = gradient_boosting_classifier()
+
+    # Handle errors
+    if isinstance(results, str) and results.startswith("<h2>Error:</h2>"):
+        return {"error": results}
+
+    # Return the file paths as a JSON response
+    return results
 
 
 @app.post("/predict")
