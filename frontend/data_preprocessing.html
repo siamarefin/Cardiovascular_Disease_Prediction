@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Preprocessing</title>
+    <link rel="stylesheet" href="/static/css/data_preprocessing.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Data Preprocessing</h1>
+      <p>Click the button below to start preprocessing the dataset.</p>
+
+      <!-- Section to display preprocessed data -->
+      <div id="preprocessed-data-container">
+        <!-- Preprocessed dataset or error messages will be displayed here -->
+      </div>
+
+      <button id="start-preprocessing" class="btn">Start Preprocessing</button>
+      <button onclick="goHome()" class="btn">Go Home</button>
+    </div>
+
+    <script>
+      document
+        .getElementById("start-preprocessing")
+        .addEventListener("click", async () => {
+          try {
+            // Call the preprocessing API
+            const response = await fetch("/data_preprocessing");
+            if (!response.ok) {
+              throw new Error("Failed to preprocess the data.");
+            }
+
+            // Parse the API response
+            const result = await response.text();
+
+            // Display the result link or error message
+            document.getElementById("preprocessed-data-container").innerHTML = `
+            <h2>Preprocessing Completed</h2>
+            ${result}
+        `;
+
+            // Path to the preprocessed CSV file
+            const filePath = "/files/final_data.csv";
+
+            // Fetch the CSV file and display it in a table
+            const csvResponse = await fetch(filePath);
+            if (!csvResponse.ok) {
+              throw new Error("Failed to load the preprocessed CSV file.");
+            }
+
+            const csvText = await csvResponse.text();
+
+            // Parse the CSV and render it as an HTML table
+            const rows = csvText.split("\n");
+            const table = document.createElement("table");
+            table.classList.add("styled-table");
+
+            rows.forEach((row, rowIndex) => {
+              const cols = row.split(",");
+              const tr = document.createElement("tr");
+
+              cols.forEach((col) => {
+                const cell =
+                  rowIndex === 0
+                    ? document.createElement("th")
+                    : document.createElement("td");
+                cell.textContent = col.trim();
+                tr.appendChild(cell);
+              });
+
+              table.appendChild(tr);
+            });
+
+            // Append the table to the container
+            const container = document.getElementById(
+              "preprocessed-data-container"
+            );
+            container.appendChild(table);
+          } catch (error) {
+            document.getElementById("preprocessed-data-container").innerHTML = `
+            <h2>Error:</h2>
+            <p>${error.message}</p>
+        `;
+          }
+        });
+      // Redirect to home page
+      function goHome() {
+        window.location.href = "/static/home.html";
+      }
+    </script>
+  </body>
+</html>

@@ -242,9 +242,49 @@ def feature_importance():
 
 
 
+import os
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
 def data_preprocessing():
-    # Example preprocessing logic
-    return {"message": "Data preprocessing complete!"}
+    try:
+        # File path for the dataset
+        file_path = "data/raw/cardio_data.csv"
+        if not os.path.exists(file_path):
+            return "<h2>Error:</h2><p>File not found: Ensure the dataset is located at 'data/raw/cardio_data.csv'</p>"
+
+        # Load the dataset
+        df = pd.read_csv(file_path)
+
+        # Ensure required columns exist
+        required_columns = ['id', 'cardio']
+        missing_columns = [col for col in required_columns if col not in df.columns]
+        if missing_columns:
+            return f"<h2>Error:</h2><p>Missing required columns: {missing_columns}</p>"
+
+        # Select relevant columns
+        df = df[['gender', 'ap_hi', 'ap_lo', 'cholesterol', 'gluc', 'smoke',
+                 'alco', 'active', 'cardio', 'age_years', 'bmi', 'bp_category_encoded']]
+
+        # Initialize the LabelEncoder
+        label_encoder = LabelEncoder()
+
+        # Apply label encoding to categorical columns
+        for column in df.select_dtypes(include=['object']).columns:
+            df[column] = label_encoder.fit_transform(df[column])
+
+        # Keep specific columns for further processing
+        df = df[['ap_hi', 'ap_lo', 'cholesterol', 'age_years', 'bmi', 'cardio']]
+
+        # Save the preprocessed dataset
+        save_dir = "files"
+        os.makedirs(save_dir, exist_ok=True)  # Ensure the directory exists
+        final_file_path = os.path.join(save_dir, "final_data.csv")
+        df.to_csv(final_file_path, index=False)
+
+        return final_file_path
+    except Exception as e:
+        return f"<h2>Error:</h2><p>{str(e)}</p>"
 
 
 def model_apply():

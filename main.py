@@ -6,7 +6,6 @@ from fastapi.staticfiles import StaticFiles
 import joblib 
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd 
-from api.code import predict, data_analysis, feature_importance
 
 
 
@@ -16,7 +15,7 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="frontend"), name = "static")
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 app.mount("/files", StaticFiles(directory="H:/Cardiovascular_Disease_Prediction/files"), name="files")
-
+app.mount("/data/processed", StaticFiles(directory="H:/Cardiovascular_Disease_Prediction/data/processed"), name="processed-data")
 
 # Serve home.html
 @app.get("/", response_class=HTMLResponse)
@@ -53,16 +52,8 @@ async def upload_merge(file: UploadFile = File(...)):
 
 @app.post("/data_analysis")
 def analysis():
-    try:
-        result = data_analysis()
-        return result
-    
-    except Exception as e :
-        error_message = f"""
-            <h2>Error:</h2>
-            <p>{str(e)}</p>
-        """
-        return HTMLResponse(content=error_message, status_code=500)
+    return data_analysis()
+
     
 @app.get("/data_visualization", response_class=HTMLResponse)
 def visualization():
@@ -70,20 +61,16 @@ def visualization():
 
 @app.get("/feature_importance")
 def importance():
-    try:
-        result  = feature_importance()
-
-        return result 
-
-    except Exception as e:
-        return " Error" 
-    return feature_importance()
+    return feature_importance() 
 
 
-@app.get("/data_preprocessing")
+@app.get("/data_preprocessing", response_class=HTMLResponse)
 def preprocessing():
-    return data_preprocessing()
+    # Call the preprocessing function
+    data_preprocessing()
+    file_Path = "files/final_data.csv"
 
+    return file_Path
 
 
 @app.get("/model_apply")
@@ -108,12 +95,7 @@ def make_prediction(input_data: dict):
     :param input_data: JSON with input features
     :return: Prediction result
     """
-    result = predict(input_data)  # Call the predict function
-
-    if "error" in result:
-        raise HTTPException(status_code=400, detail=result["error"])  # Handle errors
-
-    return result
+    return predict(input_data)
 
 
 
