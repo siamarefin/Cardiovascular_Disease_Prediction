@@ -17,8 +17,8 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="frontend"), name = "static")
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 app.mount("/files", StaticFiles(directory="files"), name="files")
-
-# Serve home.html
+ 
+# Serve home.html 
 
 @app.get("/", response_class=HTMLResponse)
 def index():
