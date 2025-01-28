@@ -16,10 +16,10 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="frontend"), name = "static")
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
-app.mount("/files", StaticFiles(directory="H:/Cardiovascular_Disease_Prediction/files"), name="files")
-app.mount("/data/processed", StaticFiles(directory="H:/Cardiovascular_Disease_Prediction/data/processed"), name="processed-data")
+app.mount("/files", StaticFiles(directory="files"), name="files")
 
 # Serve home.html
+
 @app.get("/", response_class=HTMLResponse)
 def index():
     with open("frontend/home.html", "r", encoding="utf-8") as file:

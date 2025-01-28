@@ -38,6 +38,16 @@ cd Cardiovascular_Disease_Prediction
 uvicorn main:app --reload
 ```
 
+## Docker run
+build 
+```
+docker build -t cvd .
+```
+run 
+```
+
+```
+
 ## Access the Web Interface : http://127.0.0.1:8000
 
 # Citation
@@ -49,3 +59,5 @@ Author: Siam Arefin
 Email: siam12@student.sust.edu
 
 Github: https://github.com/siamarefin 
+
+

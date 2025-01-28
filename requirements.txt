@@ -7,5 +7,5 @@ xgboost
 joblib
 matplotlib
 seaborn
-umap-learn
 pydantic
+python-multipart

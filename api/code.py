@@ -519,7 +519,7 @@ def xgboost_classifier():
 
 
 # Get the absolute path to the model file
-model_path = os.path.join("files", "XGBoostClassifier_model.pkl")
+model_path = os.path.join("XGBoostClassifier_model.pkl")
 
 # Load the model
 try:
