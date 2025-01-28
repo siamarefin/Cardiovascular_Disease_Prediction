@@ -39,13 +39,17 @@ uvicorn main:app --reload
 ```
 
 ## Docker run
-build 
+
+build
+
 ```
 docker build -t cvd .
 ```
-run 
-```
 
+run
+
+```
+docker run --name container -p 8000:8000 cvd
 ```
 
 ## Access the Web Interface : http://127.0.0.1:8000
@@ -58,6 +62,4 @@ Author: Siam Arefin
 
 Email: siam12@student.sust.edu
 
-Github: https://github.com/siamarefin 
-
-
+Github: https://github.com/siamarefin
